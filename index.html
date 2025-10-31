@@ -31,50 +31,32 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     
-    /* Card flip container */
-    .card-container {
-      perspective: 1000px;
-      margin-bottom: 2em;
-      height: 300px;
-    }
-    
     .card {
-      position: relative;
-      width: 100%;
-      height: 300px;
-      transition: transform 0.8s;
-      transform-style: preserve-3d;
-      cursor: pointer;
-    }
-    
-    .card.flipped {
-      transform: rotateY(180deg);
-    }
-    
-    .card-face {
-      position: absolute;
-      width: 100%;
-      height: 300px;
-      backface-visibility: hidden;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      border: 3px solid #fff;
       border-radius: 16px;
-      padding: 1.5em;
+      padding: 2em 1.5em;
+      margin-bottom: 1.5em;
+      min-height: 200px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: all 0.4s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
     
-    /* Front of card - cover design */
-    .card-front {
-      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-      border: 3px solid #fff;
+    .card.has-blessing {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
     }
     
-    .card-front .ornament {
-      font-size: 3em;
-      margin-bottom: 0.2em;
+    .card-cover {
+      text-align: center;
+    }
+    
+    .card-cover .ornament {
+      font-size: 3.5em;
+      margin-bottom: 0.3em;
       animation: float 3s ease-in-out infinite;
     }
     
@@ -83,47 +65,50 @@
       50% { transform: translateY(-10px); }
     }
     
-    .card-front h2 {
-      font-size: 1.6em;
+    .card-cover h2 {
+      font-size: 1.5em;
       color: #8B4513;
       margin: 0.5em 0;
       font-weight: 600;
     }
     
-    .card-front p {
+    .card-cover p {
       font-size: 0.95em;
       color: #666;
-      margin: 0.8em 0;
+      margin: 0.6em 0;
       line-height: 1.5;
     }
     
-    .card-front .hint {
+    .card-cover .hint {
       font-size: 0.85em;
       color: #999;
-      margin-top: 1.5em;
+      margin-top: 1em;
       font-style: italic;
-    }
-    
-    /* Back of card - blessing content */
-    .card-back {
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-      transform: rotateY(180deg);
-      border: 3px solid #fff;
     }
     
     .blessing-content {
       text-align: center;
-      width: 100%;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .blessing-content.show {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .blessing-content p {
-      margin: 0.6em 0;
-      line-height: 1.6;
-      font-size: 0.95em;
+      margin: 0.7em 0;
+      line-height: 1.7;
+      font-size: 1em;
     }
     
     .blessing-content .chinese {
-      font-size: 1.1em;
+      font-size: 1.2em;
       font-weight: 600;
       color: #2c3e50;
     }
@@ -131,19 +116,19 @@
     .blessing-content .english {
       font-style: italic;
       color: #34495e;
-      font-size: 0.9em;
+      font-size: 0.95em;
     }
     
     .blessing-content .malay {
       color: #34495e;
-      font-size: 0.9em;
+      font-size: 0.95em;
     }
     
     .blessing-content .reference {
-      font-size: 0.8em;
+      font-size: 0.85em;
       color: #7f8c8d;
       margin-top: 1em;
-      padding-top: 0.8em;
+      padding-top: 1em;
       border-top: 1px solid rgba(0,0,0,0.1);
     }
     
@@ -188,17 +173,14 @@
       .container {
         padding: 1.5em;
       }
-      .card {
-        height: 260px;
-      }
       h1 {
         font-size: 1.1em;
       }
-      .card-face {
-        padding: 1.2em;
-        height: 260px;
+      .card {
+        padding: 1.5em 1em;
+        min-height: 180px;
       }
-      .card-front h2 {
+      .card-cover h2 {
         font-size: 1.3em;
       }
       button {
@@ -212,25 +194,21 @@
   <div class="container">
     <h1>🌸 每日祝福 | Blessing of the Day | Berkat Harian 🌸</h1>
     
-    <div class="card-container">
-      <div id="blessing-card" class="card">
-        <!-- Front of card -->
-        <div class="card-face card-front">
-          <div class="ornament">✨</div>
-          <h2>今日的祝福</h2>
-          <p><strong>Today's Blessing</strong></p>
-          <p><strong>Berkat Hari Ini</strong></p>
-          <div class="hint">👇 点击下方按钮获取祝福 👇</div>
-        </div>
-        
-        <!-- Back of card -->
-        <div class="card-face card-back">
-          <div class="blessing-content">
-            <p class="chinese">点击"抽取祝福"开始</p>
-            <p class="english">Click "Get Blessing" to start</p>
-            <p class="malay">Klik "Dapatkan Berkat" untuk mula</p>
-          </div>
-        </div>
+    <div id="blessing-card" class="card">
+      <!-- Cover (shown by default) -->
+      <div class="card-cover" id="card-cover">
+        <div class="ornament">✨</div>
+        <h2>今日的祝福</h2>
+        <p><strong>Today's Blessing</strong></p>
+        <p><strong>Berkat Hari Ini</strong></p>
+        <div class="hint">👇 点击下方按钮获取祝福 👇</div>
+      </div>
+      
+      <!-- Blessing content (hidden initially) -->
+      <div class="blessing-content" id="blessing-content">
+        <p class="chinese">点击"抽取祝福"开始</p>
+        <p class="english">Click "Get Blessing" to start</p>
+        <p class="malay">Klik "Dapatkan Berkat" untuk mula</p>
       </div>
     </div>
     
@@ -251,14 +229,15 @@
       const shareBtn = document.getElementById('share-btn');
       const musicBtn = document.getElementById('music-btn');
       const card = document.getElementById('blessing-card');
+      const cardCover = document.getElementById('card-cover');
+      const blessingContent = document.getElementById('blessing-content');
       const bgm = document.getElementById('bgm');
 
       let blessings = [];
       let currentBlessing = null;
       let audioPlaying = true;
-      let isFlipped = false;
-      let lastIndex = -1; // Track last blessing to avoid immediate repeats
-      let usedIndices = []; // Track recently used blessings
+      let lastIndex = -1;
+      let usedIndices = [];
 
       const FALLBACK = [
         {
@@ -281,33 +260,19 @@
         }
       ];
 
-      // Enhanced random function using crypto API for better randomness
       function getSecureRandom(max) {
         const array = new Uint32Array(1);
         crypto.getRandomValues(array);
         return array[0] % max;
       }
 
-      // Fisher-Yates shuffle for better distribution
-      function shuffleArray(array) {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = getSecureRandom(i + 1);
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-      }
-
-      // Get truly random blessing, avoiding recent ones
       function getRandomBlessing() {
         if (blessings.length === 0) return null;
         
-        // If we've used most blessings, reset the pool
         if (usedIndices.length >= Math.floor(blessings.length * 0.7)) {
           usedIndices = [];
         }
         
-        // Create pool of available indices (not recently used)
         let availableIndices = [];
         for (let i = 0; i < blessings.length; i++) {
           if (!usedIndices.includes(i) && i !== lastIndex) {
@@ -315,16 +280,13 @@
           }
         }
         
-        // If pool is empty (shouldn't happen), use all indices
         if (availableIndices.length === 0) {
           availableIndices = Array.from({length: blessings.length}, (_, i) => i);
         }
         
-        // Pick random index from available pool
         const randomPosition = getSecureRandom(availableIndices.length);
         const selectedIndex = availableIndices[randomPosition];
         
-        // Track this selection
         lastIndex = selectedIndex;
         usedIndices.push(selectedIndex);
         
@@ -335,13 +297,17 @@
         if (!item) return;
         currentBlessing = item;
         
-        const backFace = card.querySelector('.card-back .blessing-content');
-        backFace.innerHTML = `
+        blessingContent.innerHTML = `
           <p class="chinese">${item.zh}</p>
           <p class="english">${item.en}</p>
           <p class="malay">${item.ms}</p>
           <div class="reference">📖 ${item.ref || ''}</div>
         `;
+        
+        // Hide cover, show blessing
+        cardCover.style.display = 'none';
+        blessingContent.classList.add('show');
+        card.classList.add('has-blessing');
       }
 
       function drawRandom() {
@@ -350,26 +316,8 @@
           return;
         }
         
-        // If card is already flipped, flip back first
-        if (isFlipped) {
-          card.classList.remove('flipped');
-          isFlipped = false;
-          setTimeout(() => {
-            drawAndFlip();
-          }, 800);
-        } else {
-          drawAndFlip();
-        }
-      }
-      
-      function drawAndFlip() {
         const blessing = getRandomBlessing();
         renderBlessing(blessing);
-        
-        setTimeout(() => {
-          card.classList.add('flipped');
-          isFlipped = true;
-        }, 100);
       }
 
       function shareCurrent() {
@@ -385,4 +333,62 @@
             title: '每日祝福 | Blessing of the Day',
             text,
             url
-          }).catch(()
+          }).catch(()=>{});
+        } else {
+          const encoded = encodeURIComponent(`${text}\n${url}`);
+          const wa = `https://wa.me/?text=${encoded}`;
+          window.open(wa, '_blank');
+        }
+      }
+
+      function updateMusicBtn() {
+        if (!musicBtn) return;
+        musicBtn.textContent = audioPlaying
+          ? '暂停音乐 | Pause Music | Hentikan Muzik'
+          : '播放音乐 | Play Music | Main Muzik';
+      }
+
+      function tryAutoPlay() {
+        if (!bgm) return;
+        bgm.volume = 0.28;
+        bgm.play()
+          .then(() => { audioPlaying = true; updateMusicBtn(); })
+          .catch(() => { audioPlaying = false; updateMusicBtn(); });
+      }
+
+      if (drawBtn) drawBtn.addEventListener('click', drawRandom);
+      if (shareBtn) shareBtn.addEventListener('click', shareCurrent);
+      if (musicBtn && bgm) {
+        musicBtn.addEventListener('click', () => {
+          if (audioPlaying) {
+            bgm.pause();
+            audioPlaying = false;
+          } else {
+            bgm.play().catch(()=>{});
+            audioPlaying = true;
+          }
+          updateMusicBtn();
+        });
+      }
+
+      fetch('blessings.json')
+        .then(resp => {
+          if (!resp.ok) throw new Error('load failed');
+          return resp.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data) || data.length === 0) throw new Error('invalid json');
+          blessings = data;
+        })
+        .catch(err => {
+          console.warn('Failed to load blessings.json — using fallback. Error:', err);
+          blessings = FALLBACK.slice();
+        })
+        .finally(() => {
+          tryAutoPlay();
+          updateMusicBtn();
+        });
+    });
+  </script>
+</body>
+</html>
