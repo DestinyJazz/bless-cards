@@ -1,46 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>每日祝福卡 • Daily Blessing</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 每日祝福 Blessing of the Day / Berkat Harian 🌸</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>🌿 每日祝福卡</h1>
-      <p class="subtitle">Daily Blessing · Berkat Harian</p>
-    </header>
+  <div class="container">
+    <h1>🌸 每日祝福 | Blessing of the Day | Berkat Harian 🌸</h1>
 
-    <div class="controls">
-      <div class="lang">
-        <button data-lang="zh" class="lang-btn active">🇨🇳 中文</button>
-        <button data-lang="en" class="lang-btn">🇬🇧 English</button>
-        <button data-lang="ms" class="lang-btn">🇲🇾 BM</button>
-      </div>
+    <div id="blessing-card" class="card">点击下方按钮抽取祝福 ✨</div>
 
-      <div class="audio-controls">
-        <button id="toggle-audio" title="播放 / 暂停音乐">⏯️</button>
-      </div>
+    <div class="button-group">
+      <button id="draw-btn">抽取祝福 | Get Blessing | Dapatkan Berkat</button>
+      <button id="share-btn">分享祝福 | Share Blessing | Kongsi Berkat</button>
+      <button id="music-btn">暂停音乐 | Pause Music | Hentikan Muzik</button>
     </div>
-
-    <main>
-      <button id="draw-btn" class="draw-btn">抽取祝福 ✨</button>
-
-      <div id="card" class="card">
-        <div id="verse" class="verse">按「抽取祝福」来领受祝福</div>
-        <div id="reference" class="reference"></div>
-      </div>
-    </main>
-
-    <footer>
-      <small>圣经经文 • Bible verses • Ayat Alkitab</small>
-    </footer>
   </div>
 
-  <!-- 背景音乐文件请命名为 background.mp3 并上传到仓库根目录 -->
-  <audio id="bg-audio" src="background.mp3" loop playsinline></audio>
+  <audio id="bgm" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f5a0627c3.mp3?filename=gentle-piano-melody-11157.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="script.js"></script>
 </body>
