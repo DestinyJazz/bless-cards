@@ -1,103 +1,67 @@
-// script.js - simple, robust, works on GitHub Pages
-document.addEventListener('DOMContentLoaded', () => {
-  const drawBtn = document.getElementById('draw-btn');
-  const verseEl = document.getElementById('verse');
-  const refEl = document.getElementById('reference');
-  const cardEl = document.getElementById('card');
+document.addEventListener("DOMContentLoaded", () => {
+  const drawBtn = document.getElementById("draw-btn");
+  const shareBtn = document.getElementById("share-btn");
+  const musicBtn = document.getElementById("music-btn");
+  const card = document.getElementById("blessing-card");
+  const bgm = document.getElementById("bgm");
 
-  const langButtons = document.querySelectorAll('.lang-btn');
-  let currentLang = 'zh';
-  let blessings = [];
+  let currentBlessing = null;
+  let isPlaying = true;
 
-  // audio
-  const audio = document.getElementById('bg-audio');
-  const audioToggle = document.getElementById('toggle-audio');
-  let audioPlaying = false;
-
-  // try autoplay (some browsers block autoplay with sound)
-  function tryAutoplay() {
-    if (!audio) return;
-    audio.volume = 0.28; // 温和音量
-    audio.play()
-      .then(() => { audioPlaying = true; updateAudioUI(); })
-      .catch(() => { audioPlaying = false; updateAudioUI(); });
-  }
-
-  // update play/pause UI
-  function updateAudioUI() {
-    if (!audioToggle) return;
-    audioToggle.textContent = audioPlaying ? '⏸️' : '▶️';
-  }
-
-  audioToggle && audioToggle.addEventListener('click', () => {
-    if (!audio) return;
-    if (audioPlaying) {
-      audio.pause();
-      audioPlaying = false;
+  // 🎵 播放控制
+  musicBtn.addEventListener("click", () => {
+    if (isPlaying) {
+      bgm.pause();
+      musicBtn.textContent = "播放音乐 | Play Music | Main Muzik";
     } else {
-      audio.play().catch(()=>{/*可能被阻止，需要用户交互*/});
-      audioPlaying = true;
+      bgm.play();
+      musicBtn.textContent = "暂停音乐 | Pause Music | Hentikan Muzik";
     }
-    updateAudioUI();
+    isPlaying = !isPlaying;
   });
 
-  // language switch
-  langButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      langButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentLang = btn.getAttribute('data-lang') || 'zh';
-      // clear card when switching
-      verseEl.textContent = '';
-      refEl.textContent = '';
-      cardEl.classList.remove('show');
-    });
+  // ✨ 抽取祝福
+  drawBtn.addEventListener("click", async () => {
+    try {
+      const res = await fetch("blessings.json");
+      const data = await res.json();
+      const randomIndex = Math.floor(Math.random() * data.length);
+      currentBlessing = data[randomIndex];
+
+      card.innerHTML = `
+        <div class="blessing-text">
+          <p><b>${currentBlessing.zh}</b></p>
+          <p><i>${currentBlessing.en}</i></p>
+          <p>${currentBlessing.ms}</p>
+          <small>📖 ${currentBlessing.ref}</small>
+        </div>
+      `;
+    } catch (e) {
+      card.textContent = "加载祝福出错，请检查 blessings.json 是否存在。";
+    }
   });
 
-  // draw function
-  function drawBlessing() {
-    if (!blessings || blessings.length === 0) {
-      verseEl.textContent = '祝福语载入中，请稍等...';
-      refEl.textContent = '';
+  // 💌 分享祝福
+  shareBtn.addEventListener("click", () => {
+    if (!currentBlessing) {
+      alert("请先抽取一则祝福 | Please draw a blessing first | Sila dapatkan berkat dahulu");
       return;
     }
-    const i = Math.floor(Math.random() * blessings.length);
-    const item = blessings[i];
-    const text = item[currentLang] || item['zh'] || '';
-    // try to split verse and reference if possible (we store full string; reference shown in small text)
-    // if blessing format is like "经文（书 章:节）"，attempt to split
-    const refMatch = text.match(/(.*?)(?:（(.+?)）|\s\((.+?)\))$/);
-    if (refMatch) {
-      verseEl.textContent = refMatch[1].trim();
-      refEl.textContent = (refMatch[2] || refMatch[3] || '').trim();
+    const text = `🌸 ${currentBlessing.zh}\n${currentBlessing.en}\n${currentBlessing.ms}\n📖 ${currentBlessing.ref}`;
+    const url = window.location.href;
+
+    if (navigator.share) {
+      navigator.share({
+        title: "每日祝福 | Blessing of the Day",
+        text,
+        url
+      });
     } else {
-      verseEl.textContent = text;
-      refEl.textContent = item['ref'] || '';
+      const encoded = encodeURIComponent(`${text}\n${url}`);
+      const waLink = `https://wa.me/?text=${encoded}`;
+      const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encoded}`;
+      window.open(waLink, "_blank");
+      setTimeout(() => window.open(fbLink, "_blank"), 1000);
     }
-    // show animation
-    cardEl.classList.add('show');
-    setTimeout(() => cardEl.classList.remove('show'), 800);
-  }
-
-  // attach click
-  drawBtn && drawBtn.addEventListener('click', drawBlessing);
-
-  // load data
-  fetch('blessings.json')
-    .then(resp => {
-      if (!resp.ok) throw new Error('load failed');
-      return resp.json();
-    })
-    .then(data => {
-      blessings = data;
-      // optionally show a random one initially
-      // drawBlessing();
-    })
-    .catch(err => {
-      console.error('Failed to load blessings.json', err);
-      verseEl.textContent = '无法载入祝福语，请检查 blessings.json 是否存在且路径正确';
-    });
-
-  // attempt autoplay
-  tryAutoplay();
+  });
 });
