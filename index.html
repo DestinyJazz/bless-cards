@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>每日祝福卡 Blessing Card</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>每日祝福卡 • Daily Blessing</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>🌿 每日祝福卡 🌿</h1>
+  <div class="wrap">
+    <header>
+      <h1>🌿 每日祝福卡</h1>
+      <p class="subtitle">Daily Blessing · Berkat Harian</p>
+    </header>
 
-    <div class="lang-buttons">
-      <button onclick="setLanguage('zh')">🇨🇳 中文</button>
-      <button onclick="setLanguage('en')">🇬🇧 English</button>
-      <button onclick="setLanguage('ms')">🇲🇾 BM</button>
+    <div class="controls">
+      <div class="lang">
+        <button data-lang="zh" class="lang-btn active">🇨🇳 中文</button>
+        <button data-lang="en" class="lang-btn">🇬🇧 English</button>
+        <button data-lang="ms" class="lang-btn">🇲🇾 BM</button>
+      </div>
+
+      <div class="audio-controls">
+        <button id="toggle-audio" title="播放 / 暂停音乐">⏯️</button>
+      </div>
     </div>
 
-    <button id="draw-btn" onclick="drawBlessing()">抽取祝福 ✨</button>
-    <div class="card" id="blessing-card"></div>
+    <main>
+      <button id="draw-btn" class="draw-btn">抽取祝福 ✨</button>
+
+      <div id="card" class="card">
+        <div id="verse" class="verse">按「抽取祝福」来领受祝福</div>
+        <div id="reference" class="reference"></div>
+      </div>
+    </main>
+
+    <footer>
+      <small>圣经经文 • Bible verses • Ayat Alkitab</small>
+    </footer>
   </div>
+
+  <!-- 背景音乐文件请命名为 background.mp3 并上传到仓库根目录 -->
+  <audio id="bg-audio" src="background.mp3" loop playsinline></audio>
 
   <script src="script.js"></script>
 </body>
