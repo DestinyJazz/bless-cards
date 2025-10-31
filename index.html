@@ -4,26 +4,379 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🌸 每日祝福 Blessing of the Day / Berkat Harian 🌸</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1em;
+    }
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5em 2em;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.4em;
+      margin-bottom: 1.5em;
+      color: #333;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    /* Card flip container */
+    .card-container {
+      perspective: 1000px;
+      margin-bottom: 1.5em;
+    }
+    
+    .card {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 2em;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+    
+    /* Front of card - cover design */
+    .card-front {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      border: 3px solid #fff;
+    }
+    
+    .card-front .ornament {
+      font-size: 4em;
+      margin-bottom: 0.3em;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .card-front h2 {
+      font-size: 1.6em;
+      color: #8B4513;
+      margin: 0.5em 0;
+      font-weight: 600;
+    }
+    
+    .card-front p {
+      font-size: 0.95em;
+      color: #666;
+      margin: 0.8em 0;
+      line-height: 1.5;
+    }
+    
+    .card-front .hint {
+      font-size: 0.85em;
+      color: #999;
+      margin-top: 1.5em;
+      font-style: italic;
+    }
+    
+    /* Back of card - blessing content */
+    .card-back {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      transform: rotateY(180deg);
+      border: 3px solid #fff;
+    }
+    
+    .blessing-content {
+      text-align: center;
+      width: 100%;
+    }
+    
+    .blessing-content p {
+      margin: 0.8em 0;
+      line-height: 1.7;
+      font-size: 1em;
+    }
+    
+    .blessing-content .chinese {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .blessing-content .english {
+      font-style: italic;
+      color: #34495e;
+    }
+    
+    .blessing-content .malay {
+      color: #34495e;
+    }
+    
+    .blessing-content .reference {
+      font-size: 0.85em;
+      color: #7f8c8d;
+      margin-top: 1.2em;
+      padding-top: 1em;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #draw-btn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+    }
+    
+    #draw-btn:hover {
+      box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5em;
+      }
+      h1 {
+        font-size: 1.1em;
+      }
+      .card-face {
+        padding: 1.5em;
+        min-height: 240px;
+      }
+      .card-front h2 {
+        font-size: 1.3em;
+      }
+      button {
+        font-size: 0.9em;
+        padding: 10px 18px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>🌸 每日祝福 | Blessing of the Day | Berkat Harian 🌸</h1>
-
-    <div id="blessing-card" class="card">点击下方按钮抽取祝福 ✨</div>
-
+    
+    <div class="card-container">
+      <div id="blessing-card" class="card">
+        <!-- Front of card -->
+        <div class="card-face card-front">
+          <div class="ornament">✨</div>
+          <h2>今日的祝福</h2>
+          <p><strong>Today's Blessing</strong></p>
+          <p><strong>Berkat Hari Ini</strong></p>
+          <div class="hint">👇 点击下方按钮获取祝福 👇</div>
+        </div>
+        
+        <!-- Back of card -->
+        <div class="card-face card-back">
+          <div class="blessing-content">
+            <p class="chinese">点击"抽取祝福"开始</p>
+            <p class="english">Click "Get Blessing" to start</p>
+            <p class="malay">Klik "Dapatkan Berkat" untuk mula</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="button-group">
       <button id="draw-btn">抽取祝福 | Get Blessing | Dapatkan Berkat</button>
       <button id="share-btn">分享祝福 | Share Blessing | Kongsi Berkat</button>
       <button id="music-btn">暂停音乐 | Pause Music | Hentikan Muzik</button>
     </div>
   </div>
-
+  
   <audio id="bgm" autoplay loop>
-    <!-- Option 1: Use a free music CDN -->
-  <source src="https://cdn.freesound.org/previews/367/367053_5121236-lq.mp3" type="audio/mpeg">
+    <source src="https://cdn.freesound.org/previews/367/367053_5121236-lq.mp3" type="audio/mpeg">
+  </audio>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const drawBtn = document.getElementById('draw-btn');
+      const shareBtn = document.getElementById('share-btn');
+      const musicBtn = document.getElementById('music-btn');
+      const card = document.getElementById('blessing-card');
+      const bgm = document.getElementById('bgm');
 
-  <script src="script.js"></script>
-</body>
-</html>
+      let blessings = [];
+      let currentBlessing = null;
+      let audioPlaying = true;
+      let isFlipped = false;
+      let lastIndex = -1; // Track last blessing to avoid immediate repeats
+      let usedIndices = []; // Track recently used blessings
 
+      const FALLBACK = [
+        {
+          "zh": "耶和华是我的牧者，我必不致缺乏。",
+          "en": "The Lord is my shepherd; I shall not want.",
+          "ms": "Tuhan ialah gembalaku, aku tidak kekurangan apa-apa.",
+          "ref": "诗篇 Psalm 23:1"
+        },
+        {
+          "zh": "你要专心仰赖耶和华，不可倚靠自己的聪明。",
+          "en": "Trust in the Lord with all your heart and lean not on your own understanding.",
+          "ms": "Percayalah kepada Tuhan dengan segenap hatimu dan janganlah bersandar kepada pengertianmu sendiri.",
+          "ref": "箴言 Proverbs 3:5"
+        },
+        {
+          "zh": "凡你们所做的，都要凭爱心而做。",
+          "en": "Do everything in love.",
+          "ms": "Lakukan segala sesuatu dengan kasih.",
+          "ref": "哥林多前书 1 Corinthians 16:14"
+        }
+      ];
+
+      // Enhanced random function using crypto API for better randomness
+      function getSecureRandom(max) {
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return array[0] % max;
+      }
+
+      // Fisher-Yates shuffle for better distribution
+      function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = getSecureRandom(i + 1);
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      // Get truly random blessing, avoiding recent ones
+      function getRandomBlessing() {
+        if (blessings.length === 0) return null;
+        
+        // If we've used most blessings, reset the pool
+        if (usedIndices.length >= Math.floor(blessings.length * 0.7)) {
+          usedIndices = [];
+        }
+        
+        // Create pool of available indices (not recently used)
+        let availableIndices = [];
+        for (let i = 0; i < blessings.length; i++) {
+          if (!usedIndices.includes(i) && i !== lastIndex) {
+            availableIndices.push(i);
+          }
+        }
+        
+        // If pool is empty (shouldn't happen), use all indices
+        if (availableIndices.length === 0) {
+          availableIndices = Array.from({length: blessings.length}, (_, i) => i);
+        }
+        
+        // Pick random index from available pool
+        const randomPosition = getSecureRandom(availableIndices.length);
+        const selectedIndex = availableIndices[randomPosition];
+        
+        // Track this selection
+        lastIndex = selectedIndex;
+        usedIndices.push(selectedIndex);
+        
+        return blessings[selectedIndex];
+      }
+
+      function renderBlessing(item) {
+        if (!item) return;
+        currentBlessing = item;
+        
+        const backFace = card.querySelector('.card-back .blessing-content');
+        backFace.innerHTML = `
+          <p class="chinese">${item.zh}</p>
+          <p class="english">${item.en}</p>
+          <p class="malay">${item.ms}</p>
+          <div class="reference">📖 ${item.ref || ''}</div>
+        `;
+      }
+
+      function drawRandom() {
+        if (!Array.isArray(blessings) || blessings.length === 0) {
+          alert('祝福语载入中，请稍后再试 / Loading blessings, please try again');
+          return;
+        }
+        
+        // If card is already flipped, flip back first
+        if (isFlipped) {
+          card.classList.remove('flipped');
+          isFlipped = false;
+          setTimeout(() => {
+            drawAndFlip();
+          }, 800);
+        } else {
+          drawAndFlip();
+        }
+      }
+      
+      function drawAndFlip() {
+        const blessing = getRandomBlessing();
+        renderBlessing(blessing);
+        
+        setTimeout(() => {
+          card.classList.add('flipped');
+          isFlipped = true;
+        }, 100);
+      }
+
+      function shareCurrent() {
+        if (!currentBlessing) {
+          alert('请先抽取祝福 / Please draw a blessing first / Sila dapatkan berkat dahulu');
+          return;
+        }
+        const text = `🌸 ${currentBlessing.zh}\n\n${currentBlessing.en}\n\n${currentBlessing.ms}\n\n📖 ${currentBlessing.ref || ''}`;
+        const url = window.location.href;
+
+        if (navigator.share) {
+          navigator.share({
+            title: '每日祝福 | Blessing of the Day',
+            text,
+            url
+          }).catch(()
