@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日祝福卡 Blessing Card</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🌿 每日祝福卡 🌿</h1>
+
+    <div class="lang-buttons">
+      <button onclick="setLanguage('zh')">🇨🇳 中文</button>
+      <button onclick="setLanguage('en')">🇬🇧 English</button>
+      <button onclick="setLanguage('ms')">🇲🇾 BM</button>
+    </div>
+
+    <button id="draw-btn" onclick="drawBlessing()">抽取祝福 ✨</button>
+    <div class="card" id="blessing-card"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
