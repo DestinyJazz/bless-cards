@@ -1,204 +1,194 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌸 每日祝福 | Blessing of the Day 🌸</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 每日祝福 Blessing of the Day / Berkat Harian 🌸</title>
   <style>
-    body {
-      font-family: 'Noto Sans SC', 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
-      color: #333;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: rgba(255,255,255,0.85);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      min-height: 160px;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    button {
-      background: linear-gradient(90deg, #6dd5fa, #2980b9);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: linear-gradient(90deg, #2980b9, #6dd5fa);
-    }
-
-    .footer {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 25px;
-    }
+    /* your original CSS here (unchanged) */
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>🌸 每日祝福 | Blessing of the Day | Berkat Harian 🌸</h1>
+  <!-- your HTML body (unchanged) -->
 
-    <div class="card" id="blessing-card">
-      <p id="verse-zh">点击下方按钮以抽取今日祝福</p>
-      <p id="verse-en"></p>
-      <p id="verse-ms"></p>
-      <p id="reference"></p>
-    </div>
-
-    <div class="button-group">
-      <button id="draw-btn">✨ 抽取祝福 | Draw Blessing | Dapatkan Berkat ✨</button>
-      <button id="share-btn">📸 分享祝福 | Share Blessing | Kongsi Berkat</button>
-      <button id="music-btn">🔊 播放音乐 | Play Music | Main Muzik</button>
-    </div>
-
-    <p class="footer">© 2025 Blessing of the Day | Inspired by God's Word</p>
-  </div>
-
-  <!-- 背景音乐 -->
   <audio id="bgm" autoplay loop muted playsinline>
     <source src="gentle-piano.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Screenshot library -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
   <script>
-    let blessings = [];
-    let currentBlessing = null;
-    let bgm = document.getElementById('bgm');
-    let musicBtn = document.getElementById('music-btn');
-    let audioPlaying = false;
+    document.addEventListener('DOMContentLoaded', () => {
+      const drawBtn = document.getElementById('draw-btn');
+      const shareBtn = document.getElementById('share-btn');
+      const musicBtn = document.getElementById('music-btn');
+      const card = document.getElementById('blessing-card');
+      const cardCover = document.getElementById('card-cover');
+      const blessingContent = document.getElementById('blessing-content');
+      const bgm = document.getElementById('bgm');
 
-    const zh = document.getElementById('verse-zh');
-    const en = document.getElementById('verse-en');
-    const ms = document.getElementById('verse-ms');
-    const ref = document.getElementById('reference');
-    const card = document.getElementById('blessing-card');
+      let blessings = [];
+      let currentBlessing = null;
+      let audioPlaying = true;
+      let lastIndex = -1;
+      let usedIndices = [];
 
-    async function loadBlessings() {
-      try {
-        const res = await fetch('blessings.json');
-        blessings = await res.json();
-      } catch (err) {
-        console.error('Failed to load blessings.json', err);
+      const FALLBACK = [
+        {
+          "zh": "耶和华是我的牧者，我必不致缺乏。",
+          "en": "The Lord is my shepherd; I shall not want.",
+          "ms": "Tuhan ialah gembalaku, aku tidak kekurangan apa-apa.",
+          "ref": "诗篇 Psalm 23:1"
+        },
+        {
+          "zh": "你要专心仰赖耶和华，不可倚靠自己的聪明。",
+          "en": "Trust in the Lord with all your heart and lean not on your own understanding.",
+          "ms": "Percayalah kepada Tuhan dengan segenap hatimu dan janganlah bersandar kepada pengertianmu sendiri.",
+          "ref": "箴言 Proverbs 3:5"
+        },
+        {
+          "zh": "凡你们所做的，都要凭爱心而做。",
+          "en": "Do everything in love.",
+          "ms": "Lakukan segala sesuatu dengan kasih.",
+          "ref": "哥林多前书 1 Corinthians 16:14"
+        }
+      ];
+
+      function getSecureRandom(max) {
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return array[0] % max;
       }
-    }
 
-    function drawBlessing() {
-      if (blessings.length === 0) return;
-      const random = blessings[Math.floor(Math.random() * blessings.length)];
-      currentBlessing = random;
-      zh.textContent = random.zh;
-      en.textContent = random.en;
-      ms.textContent = random.ms;
-      ref.textContent = random.ref;
-      card.style.transform = 'scale(1.05)';
-      setTimeout(() => (card.style.transform = 'scale(1)'), 200);
-    }
-
-    function shareCurrent() {
-      if (!currentBlessing) {
-        alert('请先抽取祝福 / Please draw a blessing first / Sila dapatkan berkat dahulu');
-        return;
-      }
-
-      const buttons = document.querySelector('.button-group');
-      buttons.style.display = 'none';
-
-      html2canvas(card, { scale: 2, backgroundColor: null }).then(canvas => {
-        buttons.style.display = 'flex';
-        canvas.toBlob(blob => {
-          const file = new File([blob], 'blessing.png', { type: 'image/png' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            navigator.share({
-              title: '🌸 每日祝福 | Blessing of the Day 🌸',
-              text: '愿主祝福你 💝',
-              files: [file]
-            }).catch(() => {});
-          } else {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = 'blessing.png';
-            link.click();
-            alert('📸 已生成祝福图片，请手动分享 / Image saved, please share manually!');
+      function getRandomBlessing() {
+        if (blessings.length === 0) return null;
+        if (usedIndices.length >= Math.floor(blessings.length * 0.7)) {
+          usedIndices = [];
+        }
+        let availableIndices = [];
+        for (let i = 0; i < blessings.length; i++) {
+          if (!usedIndices.includes(i) && i !== lastIndex) {
+            availableIndices.push(i);
           }
-        });
-      });
-    }
-
-    function toggleMusic() {
-      if (!bgm) return;
-      if (audioPlaying) {
-        bgm.pause();
-        audioPlaying = false;
-        musicBtn.textContent = '🔇 暂停音乐 | Pause Music | Hentikan Muzik';
-      } else {
-        bgm.play().then(() => {
-          bgm.muted = false;
-          audioPlaying = true;
-          musicBtn.textContent = '🔊 播放音乐 | Play Music | Main Muzik';
-        });
+        }
+        if (availableIndices.length === 0) {
+          availableIndices = Array.from({length: blessings.length}, (_, i) => i);
+        }
+        const randomPosition = getSecureRandom(availableIndices.length);
+        const selectedIndex = availableIndices[randomPosition];
+        lastIndex = selectedIndex;
+        usedIndices.push(selectedIndex);
+        return blessings[selectedIndex];
       }
-    }
 
-    function tryAutoPlay() {
-      if (!bgm) return;
-      bgm.volume = 0.3;
-      bgm.muted = true;
-      const playPromise = bgm.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          setTimeout(() => { bgm.muted = false; }, 1000);
+      function renderBlessing(item) {
+        if (!item) return;
+        currentBlessing = item;
+        blessingContent.innerHTML = `
+          <div class="text-block">
+            <p class="chinese">${item.zh}</p>
+            <p class="english">${item.en}</p>
+            <p class="malay">${item.ms}</p>
+          </div>
+          <div class="reference">📖 ${item.ref || ''}</div>
+          <div class="footer-text">💝 愿主祝福你 💝</div>
+        `;
+        cardCover.style.display = 'none';
+        blessingContent.classList.add('show');
+        card.classList.add('has-blessing');
+      }
+
+      function drawRandom() {
+        if (!Array.isArray(blessings) || blessings.length === 0) {
+          alert('祝福语载入中，请稍后再试 / Loading blessings, please try again');
+          return;
+        }
+        const blessing = getRandomBlessing();
+        renderBlessing(blessing);
+      }
+
+      function shareCurrent() {
+        if (!currentBlessing) {
+          alert('请先抽取祝福 / Please draw a blessing first / Sila dapatkan berkat dahulu');
+          return;
+        }
+        const text = `🌸 每日祝福 Daily Blessing 🌸\n\n${currentBlessing.zh}\n\n${currentBlessing.en}\n\n${currentBlessing.ms}\n\n📖 ${currentBlessing.ref || ''}\n\n💝 愿主祝福你 💝`;
+        const url = window.location.href;
+        if (navigator.share) {
+          navigator.share({ title: '每日祝福 | Blessing of the Day', text, url }).catch(()=>{});
+        } else {
+          const encoded = encodeURIComponent(`${text}\n\n${url}`);
+          window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+      }
+
+      function updateMusicBtn() {
+        if (!musicBtn) return;
+        musicBtn.textContent = audioPlaying
+          ? '🎵 暂停音乐 | Pause Music | Hentikan Muzik'
+          : '🎵 播放音乐 | Play Music | Main Muzik';
+      }
+
+      function tryAutoPlay() {
+        if (!bgm) return;
+        bgm.volume = 0.28;
+        bgm.play().then(() => {
           audioPlaying = true;
+          updateMusicBtn();
         }).catch(() => {
           audioPlaying = false;
+          updateMusicBtn();
         });
       }
-    }
 
-    document.getElementById('draw-btn').addEventListener('click', drawBlessing);
-    document.getElementById('share-btn').addEventListener('click', shareCurrent);
-    document.getElementById('music-btn').addEventListener('click', toggleMusic);
+      if (drawBtn) drawBtn.addEventListener('click', drawRandom);
+      if (shareBtn) shareBtn.addEventListener('click', shareCurrent);
+      if (musicBtn && bgm) {
+        musicBtn.addEventListener('click', () => {
+          if (audioPlaying) {
+            bgm.pause();
+            audioPlaying = false;
+          } else {
+            bgm.play().catch(()=>{});
+            audioPlaying = true;
+          }
+          updateMusicBtn();
+        });
+      }
 
-    loadBlessings();
-    tryAutoPlay();
+      // ✅ Modified fetch logic (auto fallback for GitHub Pages)
+      fetch('blessings.json')
+        .then(resp => {
+          if (!resp.ok) throw new Error('load failed');
+          return resp.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data) || data.length === 0) throw new Error('invalid json');
+          blessings = data;
+          console.log(`✅ Loaded ${data.length} blessings from blessings.json`);
+        })
+        .catch(err => {
+          console.warn('⚠️ blessings.json failed to load, trying script fallback...', err);
+          const script = document.createElement('script');
+          script.src = 'blessings.js'; // optional backup
+          script.onload = () => {
+            if (window.BLESSINGS_DATA && Array.isArray(window.BLESSINGS_DATA)) {
+              blessings = window.BLESSINGS_DATA;
+              console.log(`✅ Loaded ${blessings.length} blessings from blessings.js`);
+            } else {
+              blessings = FALLBACK.slice();
+              console.warn('⚠️ blessings.js not found, using fallback list.');
+            }
+          };
+          script.onerror = () => {
+            blessings = FALLBACK.slice();
+            console.warn('⚠️ All loading failed — using fallback.');
+          };
+          document.body.appendChild(script);
+        })
+        .finally(() => {
+          tryAutoPlay();
+          updateMusicBtn();
+        });
+    });
   </script>
 </body>
 </html>
