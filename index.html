@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🌸 每日祝福 Blessing of the Day / Berkat Harian 🌸</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700&display=swap');
+    
     body {
       margin: 0;
       font-family: "Noto Sans SC", "Segoe UI", sans-serif;
@@ -21,7 +23,7 @@
       padding: 2.5em 2em;
       border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      max-width: 500px;
+      max-width: 520px;
       width: 100%;
     }
     h1 {
@@ -32,64 +34,108 @@
     }
     
     .card {
-      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-      border: 3px solid #fff;
-      border-radius: 16px;
-      padding: 2em 1.5em;
+      background: linear-gradient(135deg, #fff5f8 0%, #ffe8f0 100%);
+      border-radius: 20px;
+      padding: 2em 1.8em;
       margin-bottom: 1.5em;
-      min-height: 200px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      min-height: 280px;
+      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
       transition: all 0.4s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid #fff;
+    }
+    
+    /* Decorative elements */
+    .card::before {
+      content: "✨";
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 1.5em;
+      opacity: 0.6;
+    }
+    
+    .card::after {
+      content: "🌸";
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+      font-size: 1.5em;
+      opacity: 0.6;
     }
     
     .card.has-blessing {
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 30%, #ffd8e8 100%);
+      box-shadow: 0 10px 30px rgba(252, 182, 159, 0.3);
     }
     
     .card-cover {
       text-align: center;
+      z-index: 1;
+    }
+    
+    .card-cover .top-decoration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+      margin-bottom: 0.8em;
+      font-size: 2em;
     }
     
     .card-cover .ornament {
-      font-size: 3.5em;
-      margin-bottom: 0.3em;
+      font-size: 3em;
       animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
     
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-12px); }
     }
     
     .card-cover h2 {
-      font-size: 1.5em;
-      color: #8B4513;
+      font-size: 1.8em;
+      background: linear-gradient(135deg, #c850c0 0%, #4158d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin: 0.5em 0;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
     
     .card-cover p {
-      font-size: 0.95em;
+      font-size: 1em;
       color: #666;
-      margin: 0.6em 0;
-      line-height: 1.5;
+      margin: 0.5em 0;
+      line-height: 1.6;
+      font-weight: 500;
     }
     
     .card-cover .hint {
-      font-size: 0.85em;
+      font-size: 0.9em;
       color: #999;
-      margin-top: 1em;
+      margin-top: 1.2em;
       font-style: italic;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3em;
     }
     
     .blessing-content {
-      text-align: center;
+      text-align: left;
       display: none;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.6s ease;
+      z-index: 1;
+      width: 100%;
+      max-width: 100%;
     }
     
     .blessing-content.show {
@@ -97,39 +143,60 @@
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .blessing-content p {
-      margin: 0.7em 0;
-      line-height: 1.7;
-      font-size: 1em;
+    .blessing-content .text-block {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.8em 1em;
+      border-radius: 12px;
+      margin: 0.6em 0;
+      border-left: 4px solid #ff6b9d;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
     .blessing-content .chinese {
-      font-size: 1.2em;
-      font-weight: 600;
+      font-size: 1.25em;
+      font-weight: 700;
       color: #2c3e50;
+      line-height: 1.7;
+      margin-bottom: 0;
     }
     
     .blessing-content .english {
       font-style: italic;
-      color: #34495e;
+      color: #555;
       font-size: 0.95em;
+      line-height: 1.6;
+      margin: 0.4em 0 0 0;
     }
     
     .blessing-content .malay {
-      color: #34495e;
+      color: #555;
       font-size: 0.95em;
+      line-height: 1.6;
+      margin: 0.4em 0 0 0;
     }
     
     .blessing-content .reference {
       font-size: 0.85em;
-      color: #7f8c8d;
+      color: #888;
       margin-top: 1em;
-      padding-top: 1em;
-      border-top: 1px solid rgba(0,0,0,0.1);
+      padding: 0.6em 1em;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      border: 2px dashed #ffb6c1;
+    }
+    
+    .blessing-content .footer-text {
+      text-align: center;
+      margin-top: 1.2em;
+      font-size: 1em;
+      color: #c850c0;
+      font-weight: 600;
     }
     
     .button-group {
@@ -142,50 +209,59 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border: none;
       color: white;
-      padding: 12px 24px;
+      padding: 14px 24px;
       font-size: 1em;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s;
-      font-weight: 500;
+      font-weight: 600;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      letter-spacing: 0.5px;
     }
     
     button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
     }
     
     button:active {
-      transform: translateY(0);
+      transform: translateY(-1px);
     }
     
     #draw-btn {
       background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+      font-size: 1.1em;
+      padding: 16px 24px;
     }
     
     #draw-btn:hover {
-      box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+      box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
     }
     
     @media (max-width: 600px) {
       .container {
-        padding: 1.5em;
+        padding: 1.8em 1.2em;
       }
       h1 {
-        font-size: 1.1em;
+        font-size: 1.15em;
       }
       .card {
-        padding: 1.5em 1em;
-        min-height: 180px;
+        padding: 1.8em 1.3em;
+        min-height: 260px;
       }
       .card-cover h2 {
-        font-size: 1.3em;
+        font-size: 1.5em;
+      }
+      .blessing-content .chinese {
+        font-size: 1.1em;
       }
       button {
-        font-size: 0.9em;
-        padding: 10px 18px;
+        font-size: 0.95em;
+        padding: 12px 20px;
+      }
+      #draw-btn {
+        font-size: 1em;
       }
     }
   </style>
@@ -197,30 +273,41 @@
     <div id="blessing-card" class="card">
       <!-- Cover (shown by default) -->
       <div class="card-cover" id="card-cover">
+        <div class="top-decoration">
+          <span>💝</span>
+          <span>🌺</span>
+          <span>☀️</span>
+        </div>
         <div class="ornament">✨</div>
-        <h2>今日的祝福</h2>
-        <p><strong>Today's Blessing</strong></p>
-        <p><strong>Berkat Hari Ini</strong></p>
-        <div class="hint">👇 点击下方按钮获取祝福 👇</div>
+        <h2>天父在乎你的工作</h2>
+        <p><strong>God Cares About Your Work</strong></p>
+        <p><strong>Tuhan Mengambil Berat Tentang Kerja Anda</strong></p>
+        <div class="hint">
+          <span>👇</span>
+          <span>点击下方按钮获取祝福</span>
+          <span>👇</span>
+        </div>
       </div>
       
       <!-- Blessing content (hidden initially) -->
       <div class="blessing-content" id="blessing-content">
-        <p class="chinese">点击"抽取祝福"开始</p>
-        <p class="english">Click "Get Blessing" to start</p>
-        <p class="malay">Klik "Dapatkan Berkat" untuk mula</p>
+        <div class="text-block">
+          <p class="chinese">点击"抽取祝福"开始</p>
+          <p class="english">Click "Get Blessing" to start</p>
+          <p class="malay">Klik "Dapatkan Berkat" untuk mula</p>
+        </div>
       </div>
     </div>
     
     <div class="button-group">
-      <button id="draw-btn">抽取祝福 | Get Blessing | Dapatkan Berkat</button>
-      <button id="share-btn">分享祝福 | Share Blessing | Kongsi Berkat</button>
-      <button id="music-btn">暂停音乐 | Pause Music | Hentikan Muzik</button>
+      <button id="draw-btn">✨ 抽取祝福 | Get Blessing | Dapatkan Berkat ✨</button>
+      <button id="share-btn">💌 分享祝福 | Share Blessing | Kongsi Berkat</button>
+      <button id="music-btn">🎵 暂停音乐 | Pause Music | Hentikan Muzik</button>
     </div>
   </div>
   
   <audio id="bgm" autoplay loop>
-    <source src="https://cdn.freesound.org/previews/367/367053_5121236-lq.mp3" type="audio/mpeg">
+    <source src="gentle-piano.mp3" type="audio/mpeg">
   </audio>
   
   <script>
@@ -298,13 +385,15 @@
         currentBlessing = item;
         
         blessingContent.innerHTML = `
-          <p class="chinese">${item.zh}</p>
-          <p class="english">${item.en}</p>
-          <p class="malay">${item.ms}</p>
+          <div class="text-block">
+            <p class="chinese">${item.zh}</p>
+            <p class="english">${item.en}</p>
+            <p class="malay">${item.ms}</p>
+          </div>
           <div class="reference">📖 ${item.ref || ''}</div>
+          <div class="footer-text">💝 愿主祝福你 💝</div>
         `;
         
-        // Hide cover, show blessing
         cardCover.style.display = 'none';
         blessingContent.classList.add('show');
         card.classList.add('has-blessing');
@@ -325,7 +414,7 @@
           alert('请先抽取祝福 / Please draw a blessing first / Sila dapatkan berkat dahulu');
           return;
         }
-        const text = `🌸 ${currentBlessing.zh}\n\n${currentBlessing.en}\n\n${currentBlessing.ms}\n\n📖 ${currentBlessing.ref || ''}`;
+        const text = `🌸 每日祝福 Daily Blessing 🌸\n\n${currentBlessing.zh}\n\n${currentBlessing.en}\n\n${currentBlessing.ms}\n\n📖 ${currentBlessing.ref || ''}\n\n💝 愿主祝福你 💝`;
         const url = window.location.href;
 
         if (navigator.share) {
@@ -335,7 +424,7 @@
             url
           }).catch(()=>{});
         } else {
-          const encoded = encodeURIComponent(`${text}\n${url}`);
+          const encoded = encodeURIComponent(`${text}\n\n${url}`);
           const wa = `https://wa.me/?text=${encoded}`;
           window.open(wa, '_blank');
         }
@@ -344,8 +433,8 @@
       function updateMusicBtn() {
         if (!musicBtn) return;
         musicBtn.textContent = audioPlaying
-          ? '暂停音乐 | Pause Music | Hentikan Muzik'
-          : '播放音乐 | Play Music | Main Muzik';
+          ? '🎵 暂停音乐 | Pause Music | Hentikan Muzik'
+          : '🎵 播放音乐 | Play Music | Main Muzik';
       }
 
       function tryAutoPlay() {
