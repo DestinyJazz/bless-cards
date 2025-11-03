@@ -3,7 +3,7 @@
 A simple, peaceful web app that displays a random Bible blessing in **Chinese, English, and Malay** — with soft background music 🎵.  
 Built entirely with HTML, CSS, and JavaScript, and hosted for free on **GitHub Pages**.
 
-👉 [View it Live](https://YOUR_USERNAME.github.io/bless-cards/)
+👉 [View it Live](https://destinyjazz.github.io/bless-cards/)
 
 ---
 
